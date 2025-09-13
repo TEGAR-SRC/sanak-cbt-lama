@@ -1,9 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Pengaturan_zyacbt extends Member_Controller {
+// Backward compatibility: original filename pengaturan_zyacbt.php now holds class Pengaturan
+// Legacy references to Pengaturan_zyacbt (e.g., autoload) can be handled via class_alias below.
+class Pengaturan extends Member_Controller {
 	private $kode_menu = 'user-zyacbt';
 	private $kelompok = 'pengaturan';
-	private $url = 'manager/pengaturan_zyacbt';
+	private $url = 'manager/pengaturan-sistem'; // new route slug
 	
     function __construct(){
 		parent:: __construct();
@@ -14,11 +16,16 @@ class Pengaturan_zyacbt extends Member_Controller {
 	}
 	
     public function index($page=null, $id=null){
+		// Redirect old URL slug to new one so menu lama diarahkan otomatis
+		if($this->uri->segment(2)==='pengaturan_zyacbt'){
+			redirect('manager/pengaturan-sistem','refresh');
+			return; // stop further execution
+		}
         $data['kode_menu'] = $this->kode_menu;
         $data['url'] = $this->url;
 		$data['current_logo'] = $this->Setting_model->get('login_logo','');
         
-        $this->template->display_admin($this->kelompok.'/pengaturan_zyacbt_view', 'Pengaturan Konfigurasi', $data);
+	$this->template->display_admin($this->kelompok.'/pengaturan_zyacbt_view', 'Pengaturan Konfigurasi', $data);
     }
 
 	public function upload_logo(){
@@ -52,7 +59,6 @@ class Pengaturan_zyacbt extends Member_Controller {
         $this->form_validation->set_rules('zyacbt-nama', 'Nama ZYACBT','required|strip_tags');
         $this->form_validation->set_rules('zyacbt-keterangan', 'Keterangan ZYACBT','required|strip_tags');
 		$this->form_validation->set_rules('zyacbt-link-login', 'Link Login Operator','required|strip_tags');
-		$this->form_validation->set_rules('zyacbt-mobile-lock-xambro', 'Lock Mobile Exam Browser','required|strip_tags');
 		$this->form_validation->set_rules('zyacbt-informasi', 'Informasi Peserta Tes','required');
 		// welcome lines optional no required rule
         
@@ -66,8 +72,6 @@ class Pengaturan_zyacbt extends Member_Controller {
 			$data['konfigurasi_isi'] = $this->input->post('zyacbt-link-login', true);
 			$this->cbt_konfigurasi_model->update('konfigurasi_kode', 'link_login_operator', $data);
 			
-			$data['konfigurasi_isi'] = $this->input->post('zyacbt-mobile-lock-xambro', true);
-			$this->cbt_konfigurasi_model->update('konfigurasi_kode', 'cbt_mobile_lock_xambro', $data);
 			
 			$data['konfigurasi_isi'] = $this->input->post('zyacbt-informasi', true);
 			$this->cbt_konfigurasi_model->update('konfigurasi_kode', 'cbt_informasi', $data);
@@ -133,11 +137,7 @@ class Pengaturan_zyacbt extends Member_Controller {
 			$data['cbt_informasi'] = $query->row()->konfigurasi_isi;
 		}
 		
-		$query = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode', 'cbt_mobile_lock_xambro', 1);
-		$data['mobile_lock_xambro'] = 'ya';
-		if($query->num_rows()>0){
-			$data['mobile_lock_xambro'] = $query->row()->konfigurasi_isi;
-		}
+		// mobile_lock_xambro removed from UI and persistence
 
 		// Welcome lines retrieval
 		$query = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_id',1);
@@ -147,4 +147,9 @@ class Pengaturan_zyacbt extends Member_Controller {
 		
 		echo json_encode($data);
     }
+}
+
+// Provide legacy class name if still referenced somewhere
+if(!class_exists('Pengaturan_zyacbt')){
+	class_alias('Pengaturan','Pengaturan_zyacbt');
 }

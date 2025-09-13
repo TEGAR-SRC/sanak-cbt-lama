@@ -44,6 +44,22 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+  <style>
+    /* MAIN NAVIGATION header: white background, dark text */
+    .sidebar-menu > li.header {
+      background:#ffffff !important;
+      color:#ffffff !important; /* force white text per request */
+      font-weight:700;
+      padding:10px 15px;
+      border-radius:4px;
+      margin:8px 10px 6px 10px;
+      text-shadow:0 0 2px rgba(0,0,0,0.3);
+    }
+  .user-panel .info a { color:#ffffff !important; }
+  /* Custom green status dot */
+  .status-dot { display:inline-block; width:12px; height:12px; border-radius:50%; background:#5ae16c; margin-right:6px; box-shadow:0 0 4px rgba(0,0,0,0.4); }
+  @media (min-width:1400px){ .status-dot { width:14px; height:14px; } }
+  </style>
     <!-- jQuery 2.1.4 -->
     <script src="<?php echo base_url(); ?>public/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.2 JS -->
@@ -192,13 +208,13 @@
             <div class="pull-left info">
               <p><?php if(!empty($nama)){ echo $nama; }else{ echo 'Administrator'; } ?></p>
 
-              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              <a href="#"><span class="status-dot"></span> Online</a>
             </div>
           </div>
           
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
-            <li class="header">MAIN NAVIGATION</li>
+            <li class="header" style="color:#ffffff;">MAIN NAVIGATION</li>
 			<li><a href="<?php echo site_url(); ?>/manager"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
             
             <?php 
@@ -214,6 +230,7 @@
 
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
+  <!-- Global heading removed per request -->
 		<?php 
 			if(!empty($content)){
 				echo $content;

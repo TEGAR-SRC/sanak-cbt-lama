@@ -1,8 +1,11 @@
 <!-- Content Header (Page header) -->
 <section class="content-header" style="margin-bottom: 20px;">
-	<h1 style="font-weight: bold;">
-		<?php if(!empty($site_name)){ echo $site_name; } ?>
-	</h1>
+    <h1 style="font-weight:700; margin:0; font-size:22px; letter-spacing:.5px;">
+        WELCOME TO COMPUTER BASED TEST
+        <small style="display:block; margin-top:4px; font-size:13px; font-weight:600; color:#2b5f56; letter-spacing:.5px;">
+            EDUKASI PERPUSTAKAN DIGITAL (EDUPUS CBT )
+        </small>
+    </h1>
 	<ol class="breadcrumb" style="background: transparent; margin-top: 10px;">
 		<li><a href="<?php echo site_url(); ?>/manager"><i class="fa fa-dashboard"></i> Home</a></li>
 		<li class="active">Dashboard</li>

@@ -110,6 +110,41 @@ class Tes_tambah extends Member_Controller {
         echo json_encode($data);
     }
 
+    /**
+     * AJAX search topik berdasarkan modul dan kata kunci (parameter GET q)
+     * URL: manager/tes_tambah/search_topik/{modul}?q=keyword
+     * Response JSON: { data:1|0, select_topik: "<option>.." }
+     */
+    function search_topik($modul=null){
+        $data['data']=0;
+        $data['select_topik'] = '<option value="kosong">Tidak Ada Topik</option>';
+        if(!empty($modul)){
+            $keyword = $this->input->get('q', TRUE);
+            $keyword = trim($keyword);
+            $data['data']=1;
+
+            // Jika keyword kosong, gunakan method existing (all topik)
+            if($keyword===''){
+                $query_topik = $this->cbt_topik_model->get_by_kolom('topik_modul_id', $modul);
+            }else{
+                // gunakan like manual sederhana
+                $this->db->like('topik_nama', $keyword);
+                $this->db->where('topik_modul_id', $modul);
+                $query_topik = $this->db->get($this->cbt_topik_model->table);
+            }
+
+            if($query_topik->num_rows()>0){
+                $select='';
+                foreach($query_topik->result() as $topik){
+                    $jml_soal = $this->cbt_soal_model->count_by_kolom('soal_topik_id', $topik->topik_id)->row()->hasil;
+                    $select .= '<option value="'.$topik->topik_id.'">'.$topik->topik_nama.' ['.$jml_soal.' soal]</option>';
+                }
+                $data['select_topik'] = $select;
+            }
+        }
+        echo json_encode($data);
+    }
+
     function tambah_tes(){
         $this->load->library('form_validation');
         

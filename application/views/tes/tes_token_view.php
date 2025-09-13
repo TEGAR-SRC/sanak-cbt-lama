@@ -32,7 +32,7 @@
                     <div class="box-body">
                         <div class="col-xs-3"></div>
                         <div class="col-xs-6">
-                            <div class="small-box bg-aqua">
+                            <div class="small-box bg-green" style="background:#5ae16c !important;">
                                 <div class="inner">
                                     <h3><span id="isi-token">0</span></h3>
                                     <p>Token Tes</p>
@@ -69,7 +69,7 @@
                         <div class="col-xs-3"></div>   
                     </div>
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-primary pull-right" id="import">Generate Token</button>
+                        <button type="submit" class="btn btn-success pull-right" id="import" style="background:#5ae16c;border-color:#2b5f56;">Generate Token</button>
                     </div>
                 </div>
             </form>
@@ -149,8 +149,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="tambah-simpan" class="btn btn-primary">Simpan</button>
-                    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+                    <button type="submit" id="tambah-simpan" class="btn btn-success" style="background:#5ae16c;border-color:#2b5f56;">Simpan</button>
+                    <a href="#" class="btn btn-success" style="background:#5ae16c;border-color:#2b5f56;" data-dismiss="modal">Close</a>
                 </div>
             </div>
         </div>

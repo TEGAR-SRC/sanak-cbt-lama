@@ -54,17 +54,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label">Lock Mobile Exam Browser</label>
-                            <div class="col-sm-8">
-								<select class="form-control input-sm" id="zyacbt-mobile-lock-xambro" name="zyacbt-mobile-lock-xambro">
-									<option value="tidak">Tidak</option>
-                                    <option value="ya">Ya</option>
-								</select>
-                                <p class="help-block">
-									Lock Browser Mobile / Browser Android agar hanya dapat digunakan melalui Exam Browser
-								</p>
-							</div>
-						</div>
+						<!-- Removed Lock Mobile Exam Browser field -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Informasi ke Peserta Tes</label>
                             <div class="col-sm-8">
@@ -131,7 +121,6 @@
 				$('#zyacbt-nama').val(data.cbt_nama);
 				$('#zyacbt-keterangan').val(data.cbt_keterangan);
 				$('#zyacbt-link-login').val(data.link_login_operator);
-				$('#zyacbt-mobile-lock-xambro').val(data.mobile_lock_xambro);
 				$('#zyacbt_informasi').val(data.cbt_informasi);
 				$('#zyacbt-informasi').val('');
 				// set welcome lines

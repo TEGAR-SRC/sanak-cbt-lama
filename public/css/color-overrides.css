@@ -1,6 +1,6 @@
 /* Override global merah (#ff0000, #f00, variasi) dan biru (#0000ff, #00f) ke warna baru.
-   Merah -> #5ae16c  (hijau terang)
-   Biru  -> #2b5f56  (hijau gelap)
+   Merah -> #5ae16c  (hijau terang utama brand)
+   Biru  -> #2b5f56  (hijau gelap aksen)
    Tidak mengubah file vendor; hanya layer override. */
 
 /* Text colors */
@@ -175,4 +175,18 @@ button[style*="d9534f"] {
 .login-divider { background:#2b5f56; position:relative; height:12px; border-radius:4px; }
 .login-divider span { background:#5ae16c; display:block; height:4px; width:55%; margin:0 auto; border-radius:4px; position:absolute; left:0; right:0; bottom:-6px; }
 .login-info { background:#e1f9e5 !important; border-left:5px solid #2b5f56 !important; color:#2b5f56 !important; }
+
+/* -------------------------------------------------- */
+/* REUSABLE BRAND COLOR UTILITY CLASSES               */
+/* -------------------------------------------------- */
+.brand-green-bg { background:#5ae16c !important; }
+.brand-green-dark-bg { background:#2b5f56 !important; }
+.brand-green-text { color:#5ae16c !important; }
+.brand-green-dark-text { color:#2b5f56 !important; }
+.brand-green-border { border-color:#5ae16c !important; }
+.brand-green-dark-border { border-color:#2b5f56 !important; }
+
+/* Buttons (optional utility classes if needed in future) */
+.btn-brand-green { background:#5ae16c !important; border:1px solid #2b5f56 !important; color:#08331a !important; }
+.btn-brand-green:hover { background:#4ac95b !important; }
 

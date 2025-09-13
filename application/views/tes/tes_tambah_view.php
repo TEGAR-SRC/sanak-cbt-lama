@@ -139,6 +139,13 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Topik</label>
                             <div class="col-sm-9">
+                                <div class="input-group input-group-sm" style="margin-bottom:5px;">
+                                    <input type="text" id="topik-search" class="form-control" placeholder="Cari Topik..." autocomplete="off">
+                                    <span class="input-group-btn">
+                                        <button type="button" id="topik-search-clear" class="btn btn-default" title="Clear"><i class="fa fa-times"></i></button>
+                                    </span>
+                                </div>
+                                <small id="topik-search-info" class="text-muted" style="display:block;margin-bottom:4px;"></small>
                                 <select style="width: 100%" class="form-control input-sm" id="soal-topik" name="soal-topik" >
                                     <div id="soal-topik-option">
                                     <option value="kosong">Pilih Topik</option>
@@ -244,6 +251,31 @@
         $.getJSON('<?php echo site_url().'/'.$url; ?>/get_topik_by_modul/'+modul, function(data){
             if(data.data==1){
                 $('#soal-topik').html(data.select_topik);
+            }
+            $("#modal-proses").modal('hide');
+        });
+    }
+
+    // Debounce helper
+    function debounce(fn, delay){
+        var t; return function(){
+            var context=this, args=arguments; clearTimeout(t); t=setTimeout(function(){fn.apply(context,args);}, delay);
+        };
+    }
+
+    function performSearch(){
+        var modul = $('#soal-modul').val();
+        var q = $('#topik-search').val();
+        var selectedBefore = $('#soal-topik').val();
+        $("#modal-proses").modal('show');
+        $.getJSON('<?php echo site_url().'/'.$url; ?>/search_topik/' + modul + '?q=' + encodeURIComponent(q), function(data){
+            if(data.data==1){
+                $('#soal-topik').html(data.select_topik);
+                if(selectedBefore && $('#soal-topik option[value="'+selectedBefore+'"]').length){
+                    $('#soal-topik').val(selectedBefore);
+                }
+                var count = $('#soal-topik option').length;
+                $('#topik-search-info').text(q ? ('Hasil: ' + count + ' topik') : '');
             }
             $("#modal-proses").modal('hide');
         });
@@ -406,5 +438,14 @@
          });  
 
         <?php if(!empty($data_tes)){ echo $data_tes; } ?>
+
+        // Search events
+        var debouncedSearch = debounce(performSearch, 300);
+        $('#topik-search').on('keyup', debouncedSearch);
+        $('#topik-search-clear').on('click', function(){
+            $('#topik-search').val('');
+            $('#topik-search-info').text('');
+            performSearch();
+        });
     });
 </script>

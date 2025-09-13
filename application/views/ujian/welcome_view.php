@@ -158,14 +158,14 @@
           </h4>
         </div>
 
-        <!-- Judul Login (restore simpler card heading for visibility) -->
+        <!-- Judul Login (restore simpler card heading for visibility)
         <div style="background:#f9f9f9; padding:14px; margin-bottom:25px; box-shadow:0 4px 12px rgba(0,0,0,0.06); border-radius:16px;">
           <h3 style="margin:0; font-weight:600; font-size:24px; color:#2b5f56; letter-spacing:.5px;">Login Siswa</h3>
-        </div>
+        </div> -->
 
         <!-- Deskripsi -->
         <p style="margin-bottom: 18px; color: #444; font-size: 15px;">
-          Masukkan Username dan Password
+          Login siswa
         </p>
 
         <!-- Input Username -->

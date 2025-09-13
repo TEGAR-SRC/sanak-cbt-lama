@@ -51,5 +51,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'welcome';
 $route['manager']="manager/welcome";
+$route['manager/pengaturan'] = 'manager/pengaturan_zyacbt'; // legacy URL (tetap jalan)
+// Friendly slug utama yang diminta
+$route['manager/pengaturan-sistem'] = 'manager/pengaturan_zyacbt';
+$route['manager/pengaturan-sistem/get_pengaturan_zyacbt'] = 'manager/pengaturan_zyacbt/get_pengaturan_zyacbt';
+$route['manager/pengaturan-sistem/simpan'] = 'manager/pengaturan_zyacbt/simpan';
+$route['manager/pengaturan-sistem/upload_logo'] = 'manager/pengaturan_zyacbt/upload_logo';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
