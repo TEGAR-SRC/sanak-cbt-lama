@@ -139,13 +139,13 @@ class Peserta_group extends Member_Controller {
 	    // get result after running query and put it in array
 		$i=$start;
 		$query = $query->result();
-	    foreach ($query as $temp) {			
+	    foreach ($query as $temp) {
 			$record = array();
-            
-			$record[] = ++$i;
-            $record[] = $temp->grup_nama;
-            $record[] = '<a onclick="edit(\''.$temp->grup_id.'\')" style="cursor: pointer;" class="btn btn-default btn-xs">Edit</a>';
-
+			// Placeholder for checkbox column (filled client-side)
+			$record[] = '';
+			$record[] = ++$i; // numbering
+			$record[] = $temp->grup_nama;
+			$record[] = '<a onclick="edit(\''.$temp->grup_id.'\')" style="cursor: pointer;" class="btn btn-default btn-xs">Edit</a>';
 			$output['aaData'][] = $record;
 		}
 		// format it to JSON, this output will be displayed in datatable
@@ -193,5 +193,35 @@ class Peserta_group extends Member_Controller {
 		}
 
 		return $sort_dir;
+	}
+
+	/**
+	 * Bulk delete groups
+	 * POST ids[] = array of grup_id
+	 */
+	public function bulk_delete(){
+		$this->output->set_content_type('application/json');
+		$ids = $this->input->post('ids');
+		if(empty($ids) || !is_array($ids)){
+			echo json_encode(['status'=>0,'pesan'=>'Tidak ada group dipilih']);
+			return; 
+		}
+		$deleted = 0; $blocked = [];
+		foreach($ids as $id){
+			$id = trim($id);
+			if($id===''){ continue; }
+			// Cek apakah group dipakai di tes
+			if($this->cbt_tesgrup_model->count_by_kolom('tstgrp_grup_id', $id)->row()->hasil>0){
+				$blocked[] = $id; // skip
+				continue;
+			}
+			$this->cbt_user_grup_model->delete('grup_id', $id);
+			$deleted++;
+		}
+		$pesan = $deleted.' group terhapus.';
+		if(!empty($blocked)){
+			$pesan .= ' ('.count($blocked).' tidak bisa dihapus karena masih dipakai Tes)';
+		}
+		echo json_encode(['status'=>1,'pesan'=>$pesan,'deleted'=>$deleted,'blocked'=>$blocked]);
 	}
 }

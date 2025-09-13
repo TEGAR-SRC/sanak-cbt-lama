@@ -28,6 +28,9 @@
                         <table id="table-group" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th style="width:28px; text-align:center;">
+                                        <input type="checkbox" id="select-all-group" />
+                                    </th>
                                     <th>No.</th>
                                     <th>Nama Group</th>
                                     <th>Action</th>
@@ -41,6 +44,12 @@
                                 </tr>
                             </tbody>
                         </table>                        
+                        <div class="clearfix" style="margin-top:10px;">
+                            <button id="btn-bulk-delete" class="btn btn-danger btn-sm" disabled>
+                                <i class="fa fa-trash"></i> Hapus Terpilih
+                            </button>
+                            <span id="bulk-info" style="margin-left:10px; font-weight:600;"></span>
+                        </div>
                     </div>
                 </div>
         </div>
@@ -143,7 +152,7 @@
     }
 
     $(function(){
-        $('#edit-simpan').click(function(){
+            $('#edit-simpan').click(function(){
             $('#edit-pilihan').val('simpan');
             $('#form-edit').submit();
         });
@@ -198,18 +207,88 @@
             return false;
         });
 
-        $('#table-group').DataTable({
+        var table = $('#table-group').DataTable({
                   "paging": true,
                   "iDisplayLength":10,
                   "bProcessing": false,
-                  "bServerSide": true, 
+                  "bServerSide": true,
                   "searching": true,
                   "aoColumns": [
-    					{"bSearchable": false, "bSortable": false, "sWidth":"20px"},
-    					{"bSearchable": false, "bSortable": false},
-                        {"bSearchable": false, "bSortable": false, "sWidth":"30px"}],
+                        {"bSearchable": false, "bSortable": false, "sWidth":"28px"},
+                        {"bSearchable": false, "bSortable": false, "sWidth":"20px"},
+                        {"bSearchable": false, "bSortable": false},
+                        {"bSearchable": false, "bSortable": false, "sWidth":"60px"}],
                   "sAjaxSource": "<?php echo site_url().'/'.$url; ?>/get_datatable/",
-                  "autoWidth": false
-         });          
+                  "autoWidth": false,
+            "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+                // aData: ['', No., Nama, Action]
+                var nomor = aData[1];
+                var nama = aData[2];
+                var actionHtml = aData[3];
+                var match = actionHtml.match(/edit\('([^']+)'\)/);
+                var grupId = match ? match[1] : '';
+                $('td:eq(0)', nRow).html('<input type="checkbox" class="chk-grup" value="'+grupId+'" />');
+                $('td:eq(1)', nRow).html(nomor);
+                $('td:eq(2)', nRow).html(nama);
+                $('td:eq(3)', nRow).html(actionHtml);
+                return nRow;
+            }
+         });
+
+        // Select all handler
+        $('#select-all-group').on('change', function(){
+            var checked = $(this).is(':checked');
+            $('.chk-grup').prop('checked', checked);
+            updateBulkInfo();
+        });
+
+        // Delegated change for dynamic rows
+        $('#table-group').on('change', '.chk-grup', function(){
+            if(!$(this).is(':checked')){
+                $('#select-all-group').prop('checked', false);
+            }
+            updateBulkInfo();
+        });
+
+        function updateBulkInfo(){
+            var total = $('.chk-grup:checked').length;
+            if(total>0){
+                $('#btn-bulk-delete').prop('disabled', false);
+                $('#bulk-info').text(total+ ' dipilih');
+            }else{
+                $('#btn-bulk-delete').prop('disabled', true);
+                $('#bulk-info').text('');
+            }
+        }
+
+        $('#btn-bulk-delete').click(function(e){
+            e.preventDefault();
+            var ids = $('.chk-grup:checked').map(function(){ return $(this).val(); }).get();
+            if(ids.length===0){ return; }
+            if(!confirm('Hapus '+ids.length+' group terpilih? Data user didalam group yang dihapus juga akan terhapus.')){ return; }
+            $(this).prop('disabled', true);
+            $.ajax({
+                url: '<?php echo site_url().'/'.$url; ?>/bulk_delete',
+                type: 'POST',
+                data: { ids: ids },
+                dataType: 'json',
+                success: function(res){
+                    if(res.status==1){
+                        notify_success(res.pesan);
+                        refresh_table();
+                        $('#select-all-group').prop('checked', false);
+                        $('#bulk-info').text('');
+                    }else{
+                        notify_error(res.pesan || 'Gagal bulk delete');
+                    }
+                },
+                error: function(){
+                    notify_error('Terjadi kesalahan koneksi');
+                },
+                complete: function(){
+                    $('#btn-bulk-delete').prop('disabled', true);
+                }
+            });
+        });
     });
 </script>

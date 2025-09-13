@@ -382,48 +382,56 @@ class Modul_soal extends Member_Controller {
 	    // get result after running query and put it in array
 		$i=$start;
 		$query = $query->result();
-	    foreach ($query as $temp) {			
+	    foreach ($query as $temp) {
 			$record = array();
-            
-			$record[] = ++$i;
+			$record[] = ++$i; // No
+
+			// Tipe Soal text
+			$tipe_text = 'Pilihan Ganda';
+			if($temp->soal_tipe==2){ $tipe_text = 'Esai'; }
+			else if($temp->soal_tipe==3){ $tipe_text = 'Jawaban Singkat'; }
+			$record[] = $tipe_text;
+
 			$soal = $temp->soal_detail;
 			$soal = str_replace("[base_url]", base_url(), $soal);
-
 			if(!empty($temp->soal_audio)){
 				$posisi = $this->config->item('upload_path').'/topik_'.$temp->soal_topik_id;
-				$soal = $soal.'<br />
-					<audio controls>
-					  <source src="'.base_url().$posisi.'/'.$temp->soal_audio.'" type="audio/mpeg">
-					Your browser does not support the audio element.
-					</audio>
-				';
+				$soal .= '<br /><audio controls style="height:24px;"><source src="'.base_url().$posisi.'/'.$temp->soal_audio.'" type="audio/mpeg"></audio>';
 			}
 
-            $record[] = $soal;
+			// If pilihan ganda (tipe 1) show jawaban list with benar/salah
+			if($temp->soal_tipe==1){
+				$jawaban_list = $this->cbt_jawaban_model->get_by_soal($temp->soal_id)->result();
+				if(!empty($jawaban_list)){
+					$soal .= '<div class="opsi-wrapper" style="margin-top:4px;">';
+					$huruf = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					$idx = 0;
+					foreach($jawaban_list as $jb){
+						$huruf_opsi = substr($huruf, $idx, 1);
+						$jb_text = str_replace("[base_url]", base_url(), $jb->jawaban_detail);
+						$status = ($jb->jawaban_benar==1)?'<span style="color:#2b5f56;font-weight:600;">Benar</span>':'<span style="color:#b33;">Salah</span>';
+						$soal .= '<div style="display:flex;gap:6px;align-items:flex-start;font-size:11px;line-height:15px;"><div style="width:10px;"><strong>'.$huruf_opsi.'.</strong></div><div style="flex:1;">'.$status.' - '.$jb_text.'</div></div>';
+						$idx++;
+					}
+					$soal .= '</div>';
+				}
+			}
 
-            $query_jawaban = $this->cbt_jawaban_model->count_by_kolom('jawaban_soal_id', $temp->soal_id)->row();
+			$record[] = $soal; // Soal + opsi
 
-            $record[] = '<div style="text-align: center;">'.$query_jawaban->hasil.'</div>';
-            /**$record[] = '
-            	<a onclick="jawaban(\''.$temp->soal_id.'\')" style="cursor: pointer;" class="btn btn-default btn-xs">Tambah Jawaban</a>
-            	<a onclick="edit(\''.$temp->soal_id.'\')" style="cursor: pointer;" class="btn btn-default btn-xs">Edit Soal</a>
-            	<a onclick="hapus(\''.$temp->soal_id.'\')" style="cursor: pointer;" class="btn btn-default btn-xs">Hapus Soal</a>
-            ';*/
-
-            if($temp->soal_tipe!=2 AND $temp->soal_tipe!=3){
-            	$record[] = '<div style="text-align: center;">
-	            	<a onclick="jawaban(\''.$temp->soal_id.'\')" title="Tambah Jawaban" style="cursor: pointer;"><span class="glyphicon glyphicon-question-sign"></span></a>
+			// Action column
+			if($temp->soal_tipe!=2 AND $temp->soal_tipe!=3){
+				$record[] = '<div style="text-align: center;">
+	            	<a onclick="jawaban(\''.$temp->soal_id.'\')" title="Kelola Jawaban" style="cursor: pointer;"><span class="glyphicon glyphicon-question-sign"></span></a>
 	            	<a onclick="edit(\''.$temp->soal_id.'\')" title="Edit Soal" style="cursor: pointer;"><span class="glyphicon glyphicon-edit"></span></a>
 	            	<a onclick="hapus(\''.$temp->soal_id.'\')" title="Hapus Soal" style="cursor: pointer;"><span class="glyphicon glyphicon-remove"></span></a>
-	            	</div>
-	            ';
-            }else{
-            	$record[] = '<div style="text-align: center;">
+	            	</div>';
+	            }else{
+				$record[] = '<div style="text-align: center;">
 	            	<a onclick="edit(\''.$temp->soal_id.'\')" title="Edit Soal" style="cursor: pointer;"><span class="glyphicon glyphicon-edit"></span></a>
 	            	<a onclick="hapus(\''.$temp->soal_id.'\')" title="Hapus Soal" style="cursor: pointer;"><span class="glyphicon glyphicon-remove"></span></a>
-	            	</div>
-	            ';
-            }
+	            	</div>';
+	            }
 
 			$output['aaData'][] = $record;
 		}
@@ -542,5 +550,39 @@ class Modul_soal extends Member_Controller {
 		}
 
 		return $sort_dir;
+	}
+
+	/**
+	 * Bulk delete soal
+	 * POST ids[] = array soal_id
+	 */
+	public function bulk_delete(){
+		$this->output->set_content_type('application/json');
+		$ids = $this->input->post('ids');
+		if(empty($ids) || !is_array($ids)){
+			echo json_encode(['status'=>0,'pesan'=>'Tidak ada soal dipilih']);
+			return;
+		}
+		$deleted = 0; $blocked = [];
+		foreach($ids as $id){
+			$id = trim($id);
+			if($id===''){ continue; }
+			$query_soal = $this->cbt_soal_model->get_by_kolom_limit('soal_id', $id, 1);
+			if($query_soal->num_rows()>0){
+				$soal = $query_soal->row();
+				// Cek apakah topik soal digunakan pada tes
+				if($this->cbt_tes_topik_set_model->count_by_kolom('tset_topik_id', $soal->soal_topik_id)->row()->hasil>0){
+					$blocked[] = $id;
+					continue;
+				}
+				$this->cbt_soal_model->delete('soal_id', $id);
+				$deleted++;
+			}
+		}
+		$pesan = $deleted.' soal terhapus.';
+		if(!empty($blocked)){
+			$pesan .= ' ('.count($blocked).' tidak bisa dihapus karena topik dipakai Tes)';
+		}
+		echo json_encode(['status'=>1,'pesan'=>$pesan,'deleted'=>$deleted,'blocked'=>$blocked]);
 	}
 }

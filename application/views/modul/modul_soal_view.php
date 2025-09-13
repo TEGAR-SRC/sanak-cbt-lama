@@ -134,21 +134,18 @@
                     </div><!-- /.box-header -->
 
                     <div class="box-body">
-                        <table id="table-soal" class="table table-bordered table-hover">
+                        <table id="table-soal" class="table table-bordered table-hover table-soal-flat">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th style="width:28px;text-align:center;">No.</th>
+                                    <th style="width:80px;">Tipe Soal</th>
                                     <th>Soal</th>
-                                    <th>Jawaban</th>
-                                    <th></th>
+                                    <th style="width:55px;text-align:center;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
+                                    <td></td><td></td><td></td><td></td>
                                 </tr>
                             </tbody>
                         </table>                        
@@ -282,6 +279,26 @@
 </section><!-- /.content -->
 
 
+
+<style>
+/* Daftar Soal tighter + clearer */
+.table-soal-flat th, .table-soal-flat td{ font-size:12px; line-height:16px; }
+.table-soal-flat th{ background:#f6f6f6; }
+.table-soal-flat td{ vertical-align:top; }
+.table-soal-flat td:nth-child(1){ text-align:center; font-weight:600; color:#2b5f56; }
+.table-soal-flat .opsi-wrapper{ border-left:2px solid #e0e0e0; margin-top:4px; padding-left:6px; }
+.table-soal-flat .opsi-wrapper div{ margin-bottom:2px; }
+/* Shrink columns more (adjusted larger) */
+.table-soal-tight th, .table-soal-tight td { font-size:12px; line-height:16px; }
+.table-soal-tight .col-chk{ width:20px; text-align:center; padding:3px 2px !important; }
+.table-soal-tight .col-no{ width:26px; text-align:center; padding:3px 2px !important; }
+.table-soal-tight .col-no .num-badge{display:inline-block;min-width:18px;padding:2px 3px;font-size:11px;line-height:14px;border-radius:10px;background:#2b5f56;color:#fff;font-weight:600;}
+.table-soal-tight .col-jml{ width:50px; text-align:center; padding:4px 2px !important; }
+.table-soal-tight .col-act{ width:54px; text-align:center; padding:4px 2px !important; }
+.table-soal-tight .col-soal{ padding:4px 7px !important; }
+.table-soal-tight td{ padding:4px 7px !important; vertical-align:top; }
+.table-soal-tight input[type=checkbox]{ width:14px; height:14px; margin:0; }
+</style>
 
 <script lang="javascript">
     function refresh_table(){
@@ -524,45 +541,32 @@
 		 
 		$( document ).ready(function() {
             refresh_topik();
-            $('#table-soal').DataTable({
-                  "paging": true,
-                  "iDisplayLength":10,
-                  "bProcessing": false,
-                  "bServerSide": true, 
-                  "searching": true,
-                  "aoColumns": [
-                        {"bSearchable": false, "bSortable": false, "sWidth":"20px"},
-                        {"bSearchable": false, "bSortable": false},
-                        {"bSearchable": false, "bSortable": false, "sWidth":"50px"},
-                        {"bSearchable": false, "bSortable": false, "sWidth":"50px"}],
-                  "sAjaxSource": "<?php echo site_url().'/'.$url; ?>/get_datatable/",
-                  "autoWidth": false,
-                  "fnServerParams": function ( aoData ) {
-                    aoData.push( { "name": "topik", "value": $('#topik').val()} );
-                  }
-            });
-
-            $('#table-image').DataTable({
-                  "bPaginate": false,
-                  "bProcessing": false,
-                  "bServerSide": true, 
-                  "searching": false,
-                  "aoColumns": [
-                        {"bSearchable": false, "bSortable": false, "sWidth":"20px"},
-                        {"bSearchable": false, "bSortable": false},
-                        {"bSearchable": false, "bSortable": false, "sWidth":"100px"},
-                        {"bSearchable": false, "bSortable": false, "sWidth":"90px"},
-                        {"bSearchable": false, "bSortable": false, "sWidth":"50px"}],
-                  "sAjaxSource": "<?php echo site_url().'/'.$url; ?>/get_datatable_image/",
-                  "autoWidth": false,
-                  "fnServerParams": function ( aoData ) {
-                    aoData.push( { "name": "topik", "value": $('#topik').val()} );
-                  }
-            });
-
-            CKEDITOR.replace('tambah_soal');
-
-            <?php if(!empty($data_soal)){ echo $data_soal; } ?>
+        var tableSoal = $('#table-soal').DataTable({
+            "paging": true,
+            "iDisplayLength":10,
+            "bProcessing": false,
+            "bServerSide": true,
+            "searching": true,
+            "aoColumns": [
+                {"bSearchable": false, "bSortable": false, "sWidth":"28px"},
+                {"bSearchable": false, "bSortable": false, "sWidth":"80px"},
+                {"bSearchable": true,  "bSortable": false},
+                {"bSearchable": false, "bSortable": false, "sWidth":"55px"}
+            ],
+            "sAjaxSource": "<?php echo site_url().'/'.$url; ?>/get_datatable/",
+            "autoWidth": false,
+            "fnServerParams": function ( aoData ) {
+                aoData.push({ "name":"topik", "value": $('#topik').val()});
+            },
+            "fnRowCallback": function( nRow, aData){
+                // aData = [No, Tipe Soal, Soal(HTML), Action]
+                $('td:eq(0)', nRow).html(aData[0]);
+                $('td:eq(1)', nRow).html(aData[1]);
+                $('td:eq(2)', nRow).html(aData[2]);
+                $('td:eq(3)', nRow).html(aData[3]);
+                return nRow;
+            }
+        });
 		});
     });
 </script>

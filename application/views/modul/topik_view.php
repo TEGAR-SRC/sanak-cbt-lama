@@ -60,7 +60,9 @@
 					</form>
 				</div>
 				<div class="box-footer">
-					<button type="button" id="btn-edit-hapus" class="btn btn-primary">Hapus</button>
+                    <button type="button" id="btn-edit-hapus" class="btn btn-primary">Hapus</button>
+                    <button type="button" id="btn-bulk-aktif" class="btn btn-success" style="margin-left:6px;">Aktifkan</button>
+                    <button type="button" id="btn-bulk-nonaktif" class="btn btn-warning" style="margin-left:4px;">Nonaktifkan</button>
 					<button type="button" id="btn-edit-pilih" class="btn btn-default pull-right">Pilih Semua</button>
 				</div>
 			</div>
@@ -87,10 +89,13 @@
 						<label>Deskripsi</label>
 						<input type="text" class="form-control" id="tambah-deskripsi" name="tambah-deskripsi" placeholder="Deskripsi Topik">
 					</div>
-					<div class="form-group">
-						<label>Status</label>
-						<input type="text" class="form-control" id="tambah-status" name="tambah-status" value="AKTIF" readonly>
-					</div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" id="tambah-status" name="tambah-status">
+                            <option value="AKTIF" selected>AKTIF</option>
+                            <option value="NONAKTIF">NONAKTIF</option>
+                        </select>
+                    </div>
 				</div>
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-primary">Tambah</button>
@@ -124,10 +129,13 @@
 						<label>Deskripsi</label>
 						<input type="text" class="form-control" id="edit-deskripsi" name="edit-deskripsi">
 					</div>
-					<div class="form-group">
-						<label>Status</label>
-						<input type="text" class="form-control" id="edit-status" name="edit-status" value="AKTIF" readonly>
-					</div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" id="edit-status" name="edit-status">
+                            <option value="AKTIF">AKTIF</option>
+                            <option value="NONAKTIF">NONAKTIF</option>
+                        </select>
+                    </div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" id="edit-hapus" class="btn btn-danger">Hapus</button>
@@ -166,6 +174,7 @@
                 $('#edit-topik-asli').val(data.topik);
                 $('#edit-deskripsi').val(data.deskripsi);
 				$('#edit-modul-id').val('');
+                if(data.status==1){ $('#edit-status').val('AKTIF'); } else { $('#edit-status').val('NONAKTIF'); }
                 
                 $("#modal-edit").modal("show");
             }
@@ -200,12 +209,39 @@
             $('#edit-pilihan').val('hapus');
             $('#form-edit').submit();
         });
-        $('#btn-edit-hapus').click(function(){
-            $("#modal-hapus").modal('show');
+        $('#btn-edit-hapus').off('click').on('click', function(){
+            var totalChecked = $('input[name^="edit-topik-id"]:checked').length;
+            if(totalChecked===0){ notify_error('Pilih topik yang akan dihapus.'); return; }
+            if(confirm('Hapus '+totalChecked+' topik terpilih?')){ $('#form-hapus').submit(); }
         });
-        $('#btn-hapus').click(function(){
-            $("#form-hapus").submit();
-        });
+
+        function collectSelectedIds(){
+            return $('input[name^="edit-topik-id"]:checked').map(function(){
+                var name = $(this).attr('name');
+                var id = name.match(/edit-topik-id\[(\d+)\]/);
+                return id? id[1]:null;
+            }).get();
+        }
+
+        function bulkStatus(newStatus){
+            var ids = collectSelectedIds();
+            if(ids.length===0){ notify_error('Pilih topik terlebih dahulu'); return; }
+            if(!confirm('Ubah status '+ids.length+' topik menjadi '+newStatus+'?')) return;
+            $.ajax({
+                url:'<?php echo site_url().'/'.$url; ?>/bulk_status',
+                type:'POST',
+                data:{ ids: ids, status: newStatus },
+                dataType:'json',
+                success:function(res){
+                    if(res.status==1){ notify_success('Status diperbarui'); refresh_table(); }
+                    else{ notify_error(res.pesan||'Gagal update'); }
+                },
+                error:function(){ notify_error('Kesalahan koneksi'); }
+            });
+        }
+
+        $('#btn-bulk-aktif').on('click', function(){ bulkStatus('AKTIF'); });
+        $('#btn-bulk-nonaktif').on('click', function(){ bulkStatus('NONAKTIF'); });
 
         $('#form-hapus').submit(function(){
             $("#modal-proses").modal('show');
@@ -219,7 +255,6 @@
                         if(obj.status==1){
                             refresh_table();
                             $("#modal-proses").modal('hide');
-                            $("#modal-hapus").modal('hide');
                             notify_success(obj.pesan);
                             $('#check').val('0');
                         }else{

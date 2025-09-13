@@ -48,13 +48,14 @@ class Modul_topik extends Member_Controller {
         $this->form_validation->set_rules('tambah-topik', 'Nama Topik','required|strip_tags');
         $this->form_validation->set_rules('tambah-modul-id', 'ID Modul','required|strip_tags');
         $this->form_validation->set_rules('tambah-deskripsi', 'Deskripsi','required|strip_tags');
-        $this->form_validation->set_rules('tambah-status', 'Status','required|strip_tags');
+	$this->form_validation->set_rules('tambah-status', 'Status','required|strip_tags');
         
         if($this->form_validation->run() == TRUE){
         	$data['topik_modul_id'] = $this->input->post('tambah-modul-id', true);
             $data['topik_nama'] = $this->input->post('tambah-topik', true);
-            $data['topik_detail'] = $this->input->post('tambah-deskripsi', true);
-            $data['topik_aktif'] = 1;
+			$data['topik_detail'] = $this->input->post('tambah-deskripsi', true);
+			$status_post = strtoupper($this->input->post('tambah-status', true));
+			$data['topik_aktif'] = ($status_post=='AKTIF' || $status_post=='1') ? 1 : 0;
 
             //if($this->cbt_topik_model->count_by_kolom('topik_nama', $data['topik_nama'])->row()->hasil>0){
             if($this->cbt_topik_model->count_by_topik_modul($data['topik_nama'], $data['topik_modul_id'])->row()->hasil>0){
@@ -149,7 +150,8 @@ class Modul_topik extends Member_Controller {
 		$this->form_validation->set_rules('edit-topik', 'Nama Topik','required|strip_tags');
 		$this->form_validation->set_rules('edit-deskripsi', 'Deskripsi','required|strip_tags');
         $this->form_validation->set_rules('edit-pilihan', 'Pilihan','required|strip_tags');
-        $this->form_validation->set_rules('edit-topik-asli', 'Nama Topik','required|strip_tags');
+	$this->form_validation->set_rules('edit-topik-asli', 'Nama Topik','required|strip_tags');
+	$this->form_validation->set_rules('edit-status', 'Status','required|strip_tags');
         
         if($this->form_validation->run() == TRUE){
             $pilihan = $this->input->post('edit-pilihan', true);
@@ -180,7 +182,9 @@ class Modul_topik extends Member_Controller {
             }else if($pilihan=='simpan'){//simpan
 				$topik_asli = $this->input->post('edit-topik-asli', true);
                 $data['topik_nama'] = $this->input->post('edit-topik', true);
-                $data['topik_detail'] = $this->input->post('edit-deskripsi', true);
+				$data['topik_detail'] = $this->input->post('edit-deskripsi', true);
+				$status_post = strtoupper($this->input->post('edit-status', true));
+				$data['topik_aktif'] = ($status_post=='AKTIF' || $status_post=='1') ? 1 : 0;
 
                 if($topik_asli!=$data['topik_nama']){
                 	//if($this->cbt_topik_model->count_by_kolom('topik_nama', $data['topik_nama'])->row()->hasil>0){
@@ -264,6 +268,37 @@ class Modul_topik extends Member_Controller {
 		// format it to JSON, this output will be displayed in datatable
         
 		echo json_encode($output);
+	}
+
+	/**
+	 * Bulk update status topik (aktif / nonaktif)
+	 * POST: ids[] (array of topik_id), status (AKTIF|NONAKTIF|1|0)
+	 */
+	public function bulk_status(){
+		$ids = $this->input->post('ids');
+		$target = strtoupper($this->input->post('status'));
+		if(empty($ids) || !is_array($ids)){
+			echo json_encode(['status'=>0,'pesan'=>'Tidak ada topik dipilih']); return; }
+		$val = ($target=='AKTIF' || $target=='1') ? 1 : 0;
+		$updated=0; $skipped=0; $blocked=0;
+		foreach($ids as $id){
+			$id = intval($id);
+			if($val==0){
+				// Nonaktifkan hanya jika tidak dipakai tes aktif (optional check)
+				// (Saat ini tetap izinkan; bisa tambahkan rule jika perlu)
+			}
+			if($this->cbt_topik_model->get_by_kolom('topik_id',$id)->num_rows()>0){
+				$this->cbt_topik_model->update('topik_id',$id,['topik_aktif'=>$val]);
+				$updated++;
+			}else{ $skipped++; }
+		}
+		echo json_encode([
+			'status'=>1,
+			'pesan'=>'Status terupdate: '. $updated .' topik',
+			'updated'=>$updated,
+			'skipped'=>$skipped,
+			'blocked'=>$blocked
+		]);
 	}
 	
 	/**
