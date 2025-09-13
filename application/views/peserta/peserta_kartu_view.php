@@ -16,7 +16,7 @@
         <div class="col-md-12">
             <div class="callout callout-info">
                 <h4>Informasi</h4>
-                <p>Lakukan Pengaturan nama pelaksana An-Ni'mah CBT sebelum mencetak kartu peserta agar kartu sesuai dengan Organisasi tempat anda melaksanakan Tes.</p>
+                <p>Lakukan Pengaturan nama pelaksana edupus sebelum mencetak kartu peserta agar kartu sesuai dengan Organisasi tempat anda melaksanakan Tes.</p>
                 <p>Pastikan terlebih dahulu data Group dan data Peserta sudah ter-upload.</p>
             </div>
         </div>
