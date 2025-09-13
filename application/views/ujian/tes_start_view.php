@@ -10,9 +10,12 @@
 	<!-- Main content -->
     <section class="content">
         <?php echo form_open($url.'/mulai_tes','id="form-konfirmasi-tes"  class="form-horizontal"'); ?>
-    <div class="box box-primary box-solid" style="border-top-color:#2b5f56 !important;">
+    <div class="box box-primary box-solid test-panel-soft" id="panel-konfirmasi-tes">
             <div class="box-header with-border">
                 <h3 class="box-title">Konfirmasi Data Tes</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse" title="Sembunyikan / Tampilkan"><i class="fa fa-minus"></i></button>
+                </div>
             </div><!-- /.box-header -->
             <div class="box-body">
                 <div class="box-body no-padding">
@@ -53,7 +56,7 @@
                   </table>
             </div><!-- /.box-body -->
             <div class="box-body">
-                <button type="submit" id="btn-tambah-simpan" class="btn btn-brand-green pull-right">Kerjakan</button>
+                <button type="submit" id="btn-tambah-simpan" class="btn btn-brand-green btn-action-start pull-right"><i class="fa fa-play-circle"></i> Kerjakan</button>
             </div>
         </div><!-- /.box -->
         </form>

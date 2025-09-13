@@ -20,13 +20,12 @@
             <input type="hidden" name="tes-soal-nomor" id="tes-soal-nomor"  value="<?php if(!empty($tes_soal_nomor)){ echo $tes_soal_nomor; } ?>">
             <input type="hidden" name="tes-soal-jml" id="tes-soal-jml" value="<?php if(!empty($tes_soal_jml)){ echo $tes_soal_jml; } ?>">
             <input type="hidden" name="tes-soal-ragu" id="tes-soal-ragu" value="<?php if(!empty($tes_ragu)){ echo $tes_ragu; } ?>">
-    		<div class="box box-success box-solid">
+            <div class="box box-primary box-solid test-panel-soft" id="panel-soal-utama">
                 <div class="box-header with-border">
                     <h3 class="box-title">Soal <span id="judul-soal"><?php if(!empty($tes_soal_nomor)){ echo 'ke '.$tes_soal_nomor; } ?></span></h3>
                     <div class="box-tools pull-right">
-                        <div class="pull-right">
-                            <div id="sisa-waktu"></div>
-                        </div>
+                        <span id="sisa-waktu" class="label label-default" style="margin-right:10px; background:#5ae16c; color:#052519; border:1px solid #2b5f56; font-weight:600;"></span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" title="Sembunyikan / Tampilkan Soal"><i class="fa fa-minus"></i></button>
                     </div>
                 </div><!-- /.box-header -->
                 <div class="box-body">
@@ -45,9 +44,13 @@
         </form>
     	</div>
         <div class="row">
-            <div class="box box-success box-solid">
+            <div class="box box-primary box-solid test-panel-soft" id="panel-daftar-soal">
                 <div class="box-header with-border">
                     <h3 class="box-title">Daftar Soal</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" title="Sembunyikan / Tampilkan Daftar"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" title="Tutup Panel Daftar"><i class="fa fa-times"></i></button>
+                    </div>
                 </div><!-- /.box-header -->
                 <div class="box-body">
                     <?php if(!empty($tes_daftar_soal)){ echo $tes_daftar_soal; } ?>

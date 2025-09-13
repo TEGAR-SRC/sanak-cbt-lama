@@ -176,6 +176,50 @@ button[style*="d9534f"] {
 .login-divider span { background:#5ae16c; display:block; height:4px; width:55%; margin:0 auto; border-radius:4px; position:absolute; left:0; right:0; bottom:-6px; }
 .login-info { background:#e1f9e5 !important; border-left:5px solid #2b5f56 !important; color:#2b5f56 !important; }
 
+/* Test working panel soft style (matching Informasi) */
+.test-panel-soft { background:#e1f9e5 !important; border:1px solid #2b5f56 !important; }
+.test-panel-soft > .box-header { background:#2b5f56 !important; color:#fff !important; }
+.test-panel-soft .box-footer { background:rgba(255,255,255,0.6); }
+/* Force header title text visible over dark header */
+.test-panel-soft > .box-header .box-title { color:#ffffff !important; }
+/* Ensure body text & links inside soft panel have strong readable contrast */
+.test-panel-soft, .test-panel-soft p, .test-panel-soft span, .test-panel-soft li { color:#112a22 !important; }
+.test-panel-soft a { color:#0f5d43 !important; font-weight:600; }
+.test-panel-soft a:hover, .test-panel-soft a:focus { color:#08402d !important; text-decoration:underline; }
+/* Improve spacing & separation */
+.test-panel-soft > .box-header { border-bottom:1px solid rgba(255,255,255,0.15) !important; }
+.test-panel-soft > .box-body { padding:18px 25px 15px 25px !important; line-height:1.45; }
+.test-panel-soft > .box-footer { border-top:1px solid rgba(0,0,0,0.08); }
+/* Question content specific (override any inline) */
+#isi-tes-soal { color:#0e372a !important; line-height:1.5 !important; }
+#isi-tes-soal p { margin-bottom:10px; }
+#isi-tes-soal ul, #isi-tes-soal ol { margin-left:18px; }
+
+/* Improve contrast when brand green used as full background (buttons, badges) */
+.btn-brand-green, .btn-danger, .btn-danger:focus, .btn-danger:hover { color:#062a17 !important; font-weight:600; }
+
+/* Slight darken for primary dark hover to keep contrast while giving feedback */
+.btn-primary:hover, .btn-primary:focus { background-color:#244d46 !important; }
+
+/* Callout text color adjustments for better contrast on bright brand bg */
+.callout.callout-danger { color:#052519 !important; 
+
+/* Utility helpers for future explicit usage */
+.text-on-brand { color:#052519 !important; }
+.text-on-dark { color:#ffffff !important; }
+.link-on-dark, .text-on-dark a { color:#5ae16c !important; font-weight:600; }
+.link-on-dark:hover, .text-on-dark a:hover { color:#7af08a !important; }
+
+/* Ensure modal close (X) and box-tool icons are visible */
+.modal .close span, .modal .close { color:#2b5f56 !important; opacity:1 !important; text-shadow:none; }
+.modal .close:hover { color:#1d3d37 !important; }
+.box.test-panel-soft .box-header .btn.btn-box-tool { color:#ffffff !important; }
+.box.test-panel-soft .box-header .btn.btn-box-tool:hover { color:#7af08a !important; }
+.box.test-panel-soft .box-header .btn.btn-box-tool .fa { font-size:14px; }
+/* Generic fallback for any dark header */
+.box-header .btn.btn-box-tool { opacity:1; }
+.box-header .btn.btn-box-tool:hover { opacity:1; }
+
 /* -------------------------------------------------- */
 /* REUSABLE BRAND COLOR UTILITY CLASSES               */
 /* -------------------------------------------------- */
@@ -188,5 +232,14 @@ button[style*="d9534f"] {
 
 /* Buttons (optional utility classes if needed in future) */
 .btn-brand-green { background:#5ae16c !important; border:1px solid #2b5f56 !important; color:#08331a !important; }
-.btn-brand-green:hover { background:#4ac95b !important; }
+.btn-brand-green { padding:8px 22px; font-weight:600; letter-spacing:.3px; border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,.18); position:relative; top:0; transition:all .15s ease; }
+.btn-brand-green:hover { background:#4ac95b !important; box-shadow:0 3px 6px rgba(0,0,0,.25); }
+.btn-brand-green:active { top:1px; box-shadow:0 1px 3px rgba(0,0,0,.3); background:#43b653 !important; }
+.btn-brand-green:focus { outline:2px solid #2b5f56 !important; outline-offset:2px; }
+.btn-brand-green i { margin-right:6px; }
+
+/* Specialized start button variant */
+.btn-action-start { background:linear-gradient(135deg,#5ae16c,#3ec957) !important; border:1px solid #2b5f56 !important; color:#062a17 !important; }
+.btn-action-start:hover { background:linear-gradient(135deg,#55d965,#37bb4f) !important; }
+.btn-action-start:active { background:linear-gradient(135deg,#49c258,#2e9e42) !important; }
 
