@@ -54,6 +54,7 @@ class Pengaturan_zyacbt extends Member_Controller {
 		$this->form_validation->set_rules('zyacbt-link-login', 'Link Login Operator','required|strip_tags');
 		$this->form_validation->set_rules('zyacbt-mobile-lock-xambro', 'Lock Mobile Exam Browser','required|strip_tags');
 		$this->form_validation->set_rules('zyacbt-informasi', 'Informasi Peserta Tes','required');
+		// welcome lines optional no required rule
         
         if($this->form_validation->run() == TRUE){
             $data['konfigurasi_isi'] = $this->input->post('zyacbt-nama', true);
@@ -70,6 +71,31 @@ class Pengaturan_zyacbt extends Member_Controller {
 			
 			$data['konfigurasi_isi'] = $this->input->post('zyacbt-informasi', true);
 			$this->cbt_konfigurasi_model->update('konfigurasi_kode', 'cbt_informasi', $data);
+
+			// Simpan welcome line Indonesia
+			if($this->input->post('welcome-line-id', true) !== null){
+				$wl_id_value = $this->input->post('welcome-line-id', true);
+				$data['konfigurasi_isi'] = $wl_id_value;
+				$cek = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_id',1);
+				if($cek->num_rows()>0){
+					$this->cbt_konfigurasi_model->update('konfigurasi_kode','welcome_line_id',$data);
+				}else{
+					$insert = array('konfigurasi_kode'=>'welcome_line_id','konfigurasi_isi'=>$wl_id_value);
+					$this->cbt_konfigurasi_model->save($insert);
+				}
+			}
+			// Simpan welcome line English
+			if($this->input->post('welcome-line-en', true) !== null){
+				$wl_en_value = $this->input->post('welcome-line-en', true);
+				$data['konfigurasi_isi'] = $wl_en_value;
+				$cek = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_en',1);
+				if($cek->num_rows()>0){
+					$this->cbt_konfigurasi_model->update('konfigurasi_kode','welcome_line_en',$data);
+				}else{
+					$insert = array('konfigurasi_kode'=>'welcome_line_en','konfigurasi_isi'=>$wl_en_value);
+					$this->cbt_konfigurasi_model->save($insert);
+				}
+			}
 
             $status['status'] = 1;
 			$status['pesan'] = 'Pengaturan berhasil disimpan ';
@@ -112,6 +138,12 @@ class Pengaturan_zyacbt extends Member_Controller {
 		if($query->num_rows()>0){
 			$data['mobile_lock_xambro'] = $query->row()->konfigurasi_isi;
 		}
+
+		// Welcome lines retrieval
+		$query = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_id',1);
+		$data['welcome_line_id'] = ($query->num_rows()>0)? $query->row()->konfigurasi_isi : 'Selamat Datang';
+		$query = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_en',1);
+		$data['welcome_line_en'] = ($query->num_rows()>0)? $query->row()->konfigurasi_isi : 'WELCOME TO COMPUTER BASED TEST';
 		
 		echo json_encode($data);
     }
