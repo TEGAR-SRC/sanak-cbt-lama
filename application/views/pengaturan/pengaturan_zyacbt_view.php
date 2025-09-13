@@ -76,6 +76,21 @@
 							</div>
 						</div>
 
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Welcome Line (ID)</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control input-sm" id="welcome-line-id" name="welcome-line-id" placeholder="Selamat Datang" />
+								<p class="help-block">Teks baris pertama di bawah logo (Bahasa Indonesia).</p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Welcome Line (EN)</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control input-sm" id="welcome-line-en" name="welcome-line-en" placeholder="WELCOME TO COMPUTER BASED TEST" />
+								<p class="help-block">Teks baris kedua di bawah logo (Bahasa Inggris / opsional).</p>
+							</div>
+						</div>
+
 							<hr />
 							<div class="form-group">
 								<label class="col-sm-4 control-label">Logo Login Siswa</label>
@@ -110,19 +125,22 @@
 
 <script lang="javascript">
 	function load_data(){
-        $("#modal-proses").modal('show');
-        $.getJSON('<?php echo site_url().'/'.$url; ?>/get_pengaturan_zyacbt', function(data){
-            if(data.data==1){
-                $('#zyacbt-nama').val(data.cbt_nama);
-                $('#zyacbt-keterangan').val(data.cbt_keterangan);
-                $('#zyacbt-link-login').val(data.link_login_operator);
+		$("#modal-proses").modal('show');
+		$.getJSON('<?php echo site_url().'/'.$url; ?>/get_pengaturan_zyacbt', function(data){
+			if(data.data==1){
+				$('#zyacbt-nama').val(data.cbt_nama);
+				$('#zyacbt-keterangan').val(data.cbt_keterangan);
+				$('#zyacbt-link-login').val(data.link_login_operator);
 				$('#zyacbt-mobile-lock-xambro').val(data.mobile_lock_xambro);
 				$('#zyacbt_informasi').val(data.cbt_informasi);
 				$('#zyacbt-informasi').val('');
-            }
-            $("#modal-proses").modal('hide');
-        });
-    }
+				// set welcome lines
+				$('#welcome-line-id').val(data.welcome_line_id || 'Selamat Datang');
+				$('#welcome-line-en').val(data.welcome_line_en || 'WELCOME TO COMPUTER BASED TEST');
+			}
+			$("#modal-proses").modal('hide');
+		});
+	}
 
     $(function(){
 		CKEDITOR.replace('zyacbt_informasi');

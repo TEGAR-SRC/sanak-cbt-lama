@@ -56,6 +56,11 @@ class Welcome extends CI_Controller {
                         if($q_nama->num_rows()>0){
                             $data['cbt_nama'] = $q_nama->row()->konfigurasi_isi;
                         }
+                        // Ambil welcome lines (ID & EN)
+                        $wl_id = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_id',1);
+                        $data['welcome_line_id'] = ($wl_id->num_rows()>0)? $wl_id->row()->konfigurasi_isi : 'Selamat Datang';
+                        $wl_en = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','welcome_line_en',1);
+                        $data['welcome_line_en'] = ($wl_en->num_rows()>0)? $wl_en->row()->konfigurasi_isi : 'WELCOME TO COMPUTER BASED TEST';
 						$this->template->display_user($this->kelompok.'/welcome_view', 'Selamat Datang', $data);
 					}else{
 						redirect('tes_dashboard');

@@ -140,12 +140,20 @@
           <img src="<?php echo $logo_src; ?>" alt="Logo" style="max-width: 180px; height: auto;">
         </div>
 
-        <!-- Teks Selamat Datang Sekolah -->
+        <!-- Teks Selamat Datang (dua baris dapat dikonfigurasi) -->
         <div style="margin-bottom: 20px;">
-          <h4 style="margin:0; font-weight:600; font-size:20px; color:#222; line-height:1.3;">
-            Selamat Datang<br />
+          <h4 style="margin:0; font-weight:600; font-size:20px; color:#222; line-height:1.35;">
+            <?php echo isset($welcome_line_id) ? htmlspecialchars($welcome_line_id) : 'Selamat Datang'; ?><br />
             <span style="color:#2b5f56; display:inline-block; margin-top:4px;">
-              <?php echo !empty($cbt_nama) ? htmlspecialchars($cbt_nama) : 'CBT'; ?>
+              <?php 
+                // Jika admin ingin memasukkan nama sekolah di baris pertama saja, baris kedua tetap CBT name? kita tetap tampilkan nama sekolah di akhir baris kedua jika bukan duplikat
+                $second = isset($welcome_line_en) ? trim($welcome_line_en) : 'WELCOME TO COMPUTER BASED TEST';
+                // Sisipkan nama sekolah jika placeholder {SEKOLAH} dipakai
+                if(strpos($second,'{SEKOLAH}') !== false){
+                  $second = str_replace('{SEKOLAH}', (!empty($cbt_nama)? htmlspecialchars($cbt_nama):'CBT'), $second);
+                }
+                echo $second;
+              ?>
             </span>
           </h4>
         </div>
