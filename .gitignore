@@ -1,0 +1,38 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Vendor & dependencies
+vendor/
+composer.lock
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Logs & cache
+application/logs/*
+!application/logs/index.html
+application/cache/*
+!application/cache/index.html
+
+# Session files (if file driver used)
+sessions/
+
+# Uploaded content (keep structure, ignore files)
+uploads/*
+!uploads/index.html
+
+# Temporary / generated
+*.bak
+*.swp
+*.tmp
+
+# Node (if any future assets)
+node_modules/
+
+# Misc
+public/apk/*.apk

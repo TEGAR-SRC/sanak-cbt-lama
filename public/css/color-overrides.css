@@ -1,0 +1,178 @@
+/* Override global merah (#ff0000, #f00, variasi) dan biru (#0000ff, #00f) ke warna baru.
+   Merah -> #5ae16c  (hijau terang)
+   Biru  -> #2b5f56  (hijau gelap)
+   Tidak mengubah file vendor; hanya layer override. */
+
+/* Text colors */
+body, html, .text-red, .text-danger { color: #000 !important; }
+.text-primary, .text-blue { color: #2b5f56 !important; }
+
+/* Links yang sebelumnya biru */
+a, a:link, a:visited { color: #2b5f56; }
+a:hover, a:focus { color: #5ae16c; }
+
+/* Button variants (Bootstrap/AdminLTE) */
+.btn-danger, .btn-danger:focus, .btn-danger:hover { background-color:#5ae16c; border-color:#5ae16c; color:#08331a; }
+.btn-primary, .btn-primary:focus, .btn-primary:hover { background-color:#2b5f56; border-color:#2b5f56; }
+
+/* Label / badges */
+.label-danger, .badge-danger { background-color:#5ae16c !important; }
+.label-primary, .badge-primary { background-color:#2b5f56 !important; }
+
+/* Panel / box headers */
+.box.box-danger, .box.box-primary { border-top-color:#2b5f56 !important; }
+.box.box-danger>.box-header, .box.box-primary>.box-header { color:#fff !important; background:#2b5f56 !important; }
+/* Solid variant */
+.box.box-danger.box-solid { border:1px solid #2b5f56 !important; }
+.box.box-danger.box-solid>.box-header { background:#2b5f56 !important; }
+
+/* Callout danger/info mapping */
+.callout.callout-danger { background-color:#5ae16c !important; border-left:5px solid #2b5f56 !important; color:#08331a !important; }
+.callout.callout-info { background-color:#2b5f56 !important; border-left:5px solid #5ae16c !important; color:#fff !important; }
+
+/* Progress bars */
+.progress-bar-danger { background-color:#5ae16c; }
+.progress-bar-primary { background-color:#2b5f56; }
+
+/* CKEditor anchor / magicline / outline overrides */
+.cke_editable a { color:#2b5f56 !important; }
+.cke_editable a:hover { color:#5ae16c !important; }
+.cke_magicline, .cke_mixed_dir_content { border-color:#5ae16c !important; }
+
+/* CodeMirror sample (jika tampil) */
+.cm-error, .cm-invalidchar { color:#5ae16c !important; }
+.cm-def { color:#2b5f56 !important; }
+
+/* Datatables selected row highlight (kalau sebelumnya pakai primary) */
+.table>tbody>tr.info, .table>tbody>tr.info>td { background-color:#2b5f56 !important; color:#fff; }
+.table>tbody>tr.danger, .table>tbody>tr.danger>td { background-color:#5ae16c !important; color:#000; }
+
+/* AdminLTE skin override: ganti skin-red menjadi custom hijau */
+.skin-red .main-header .navbar { background-color:#2b5f56; }
+.skin-red .main-header .logo { background-color:#2b5f56; color:#fff; }
+.skin-red .main-header .logo:hover { background-color:#2b5f56; }
+.skin-red .sidebar-menu>li.active>a, .skin-red .sidebar-menu>li:hover>a { border-left-color:#5ae16c; background:#2b5f56; }
+/* Force replace original skin-red palette (AdminLTE default uses #dd4b39, #d73925) */
+.skin-red .sidebar-menu>li>a { color:#fff !important; }
+.skin-red .wrapper, .skin-red .content-wrapper, .skin-red .right-side { background:#f3f6f7 !important; }
+.skin-red .sidebar-menu>li.header { color:#000 !important; background:#2b5f56 !important; }
+.skin-red .user-panel>.info>a { color:#000 !important; }
+.skin-red .main-header .navbar .nav>li>a:hover { background:#5ae16c !important; color:#08331a !important; }
+/* Dropdown user box (user-header) recolor */
+.skin-red .dropdown-menu > .user-header, 
+.skin-red .user-header, 
+.skin-red .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+   background:#2b5f56 !important; /* hijau tua */
+   color:#fff !important;
+}
+.skin-red .user-header a, .skin-red .user-header p { color:#5ae16c !important; }
+
+/* PNotify types mapped */
+.ui-pnotify .alert-danger { background-color:#5ae16c; border-color:#5ae16c; color:#000; }
+.ui-pnotify .alert-info { background-color:#2b5f56; border-color:#2b5f56; }
+
+/* Generic replacements for inline styles that used old hex codes */
+[style*="#ff0000"], [style*="#FF0000"], [style*="#f00"], [style*="#F00"], [style*="#dd4b39"], [style*="#DD4B39"], [style*="red;"], [style*="Red;"], [style*="RED;"] { color:#000 !important; border-color:#5ae16c !important; background-color:#5ae16c !important; }
+[style*="#0000ff"], [style*="#0000FF"], [style*="#00f"], [style*="#00F"], [style*="#3c8dbc"], [style*="#367fa9"], [style*="blue;"], [style*="Blue;"], [style*="BLUE;"] { color:#2b5f56 !important; border-color:#2b5f56 !important; background-color:#2b5f56 !important; }
+
+/* Background color replacements */
+.bg-red, .callout.callout-danger { background-color:#5ae16c !important; }
+.bg-blue, .callout.callout-info, .callout.callout-primary { background-color:#2b5f56 !important; }
+
+/* Optional: selection */
+::selection { background:#5ae16c; color:#08331a; }
+::-moz-selection { background:#5ae16c; color:#08331a; }
+
+/* -------------------------------------------------- */
+/* LOGIN PAGE SPECIAL STYLING                         */
+/* -------------------------------------------------- */
+/* Headings (Login Siswa / Operator / Administrator) */
+.login-box h3,
+.login-box h5,
+.box .box-header .box-title,
+.login-title,
+h3.login-title,
+h5.login-title {
+   color: #2b5f56 !important; /* dark green primary */
+}
+
+/* Primary login buttons (convert previous red/blue) */
+button.btn.btn-primary,
+button.btn.btn-info,
+.btn.btn-info#btn-login,
+.btn.btn-primary#btn-login,
+.login-box button[type=submit],
+.box-footer #btn-login {
+   background: #5ae16c !important;
+   border-color: #2b5f56 !important;
+   color: #000 !important;
+   font-weight: 600;
+   box-shadow: 0 2px 4px rgba(0,0,0,.15);
+}
+button.btn.btn-primary:hover,
+button.btn.btn-info:hover,
+.btn#btn-login:hover,
+.login-box button[type=submit]:hover {
+   background: #4ac95b !important;
+}
+
+/* Operator link button (yellow previously) keep readable, add border harmony */
+.operator-box a.btn.btn-primary,
+.operator-box a.btn {
+   background: #5ae16c !important;
+   color: #000 !important;
+   border: 2px solid #2b5f56 !important;
+   font-weight: 600;
+}
+.operator-box a.btn:hover { background: #4ac95b !important; }
+
+/* Info / alert callout on login page (was red) */
+.login-box .callout,
+.content .callout,
+.callout[style*="f8d7da"], /* inline styled previous red schema */
+.callout[style*="dc3545"],
+.callout[style*="721c24"] {
+   background: #e1f9e5 !important; /* pale green */
+   border-left: 5px solid #2b5f56 !important;
+   color: #2b5f56 !important;
+}
+.login-box .callout h4,
+.content .callout h4 { color: #2b5f56 !important; }
+
+/* Input focus accents */
+.login-box input:focus,
+.box-body input:focus {
+   border-color: #5ae16c !important;
+   box-shadow: 0 0 0 2px rgba(90,225,108,.25) !important;
+}
+
+/* Checkbox accent (iCheck replacement fallback) */
+input[type=checkbox]:checked { accent-color: #2b5f56; }
+
+/* Subtle divider bars recolor if any inline uses old blue */
+.login-box div[style*="#3c8dbc"],
+.operator-box h5[style*="#3c8dbc"] {
+   color: #2b5f56 !important;
+}
+
+/* Remove legacy inline button red backgrounds */
+button[style*="CD5656"],
+button[style*="cd5656"],
+button[style*="dc3545"],
+button[style*="D9534F"],
+button[style*="d9534f"] {
+   background: #5ae16c !important;
+   color: #000 !important;
+   border: 1px solid #2b5f56 !important;
+}
+
+/* Provide transition for nicer feel */
+.login-box button,
+.operator-box a.btn { transition: all .15s ease-in-out; }
+
+/* Reusable login heading & divider (untuk hilangkan inline style nanti) */
+.login-heading { color:#2b5f56; font-weight:600; } /* used if present */
+.login-divider { background:#2b5f56; position:relative; height:12px; border-radius:4px; }
+.login-divider span { background:#5ae16c; display:block; height:4px; width:55%; margin:0 auto; border-radius:4px; position:absolute; left:0; right:0; bottom:-6px; }
+.login-info { background:#e1f9e5 !important; border-left:5px solid #2b5f56 !important; color:#2b5f56 !important; }
+
