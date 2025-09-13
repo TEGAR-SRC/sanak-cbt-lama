@@ -8,6 +8,7 @@ class Pengaturan_zyacbt extends Member_Controller {
     function __construct(){
 		parent:: __construct();
 		$this->load->model('cbt_konfigurasi_model');
+		$this->load->model('Setting_model');
 
 		parent::cek_akses($this->kode_menu);
 	}
@@ -15,9 +16,35 @@ class Pengaturan_zyacbt extends Member_Controller {
     public function index($page=null, $id=null){
         $data['kode_menu'] = $this->kode_menu;
         $data['url'] = $this->url;
+		$data['current_logo'] = $this->Setting_model->get('login_logo','');
         
         $this->template->display_admin($this->kelompok.'/pengaturan_zyacbt_view', 'Pengaturan Konfigurasi', $data);
     }
+
+	public function upload_logo(){
+		if(empty($_FILES['logo']['name'])){
+			echo json_encode(['status'=>0,'pesan'=>'File belum dipilih']);
+			return; }
+		$config['upload_path'] = FCPATH.'public/uploads/logo/';
+		if(!is_dir($config['upload_path'])){ mkdir($config['upload_path'],0755,true); }
+		$config['allowed_types'] = 'jpg|jpeg|png|gif|webp';
+		$config['max_size'] = 1024; // KB
+		$config['file_ext_tolower'] = TRUE;
+		$config['encrypt_name'] = TRUE;
+		$this->load->library('upload', $config);
+		if(!$this->upload->do_upload('logo')){
+			echo json_encode(['status'=>0,'pesan'=>$this->upload->display_errors('','')]);
+			return; }
+		$data = $this->upload->data();
+		if(isset($data['image_width']) && $data['image_width']>400){
+			$this->load->library('image_lib');
+			$conf_resize = [ 'image_library'=>'gd2','source_image'=>$data['full_path'],'maintain_ratio'=>TRUE,'width'=>400 ];
+			$this->image_lib->initialize($conf_resize); @ $this->image_lib->resize();
+		}
+		$relative = 'public/uploads/logo/'.$data['file_name'];
+		$this->Setting_model->set('login_logo',$relative);
+		echo json_encode(['status'=>1,'pesan'=>'Logo diperbarui','path'=>base_url($relative)]);
+	}
 
     function simpan(){
         $this->load->library('form_validation');

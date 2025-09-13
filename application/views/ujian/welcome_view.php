@@ -133,7 +133,11 @@
 
         <!-- Logo Besar -->
         <div style="margin-bottom: 18px;">
-          <img src="https://cbt1.edupus.id/edupus.jpg" alt="Logo" style="max-width: 180px; height: auto;">
+          <?php
+            // $login_logo diset dari controller (Welcome@index) jika tersedia
+            $logo_src = !empty($login_logo) ? base_url($login_logo) : 'https://cbt1.edupus.id/edupus.jpg';
+          ?>
+          <img src="<?php echo $logo_src; ?>" alt="Logo" style="max-width: 180px; height: auto;">
         </div>
 
         <!-- Judul Login (restore simpler card heading for visibility) -->

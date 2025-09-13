@@ -47,7 +47,9 @@ class Welcome extends CI_Controller {
 						if($query_konfigurasi->num_rows()>0){
 							$data['cbt_keterangan'] = $query_konfigurasi->row()->konfigurasi_isi;
 						}
-						
+						// Ambil logo login dari Setting_model jika ada
+						$this->load->model('Setting_model');
+						$data['login_logo'] = $this->Setting_model->get('login_logo', '');
 						$this->template->display_user($this->kelompok.'/welcome_view', 'Selamat Datang', $data);
 					}else{
 						redirect('tes_dashboard');

@@ -75,6 +75,27 @@
 								</p>
 							</div>
 						</div>
+
+							<hr />
+							<div class="form-group">
+								<label class="col-sm-4 control-label">Logo Login Siswa</label>
+								<div class="col-sm-8">
+									<div id="logo-alert"></div>
+									<div style="margin-bottom:8px;">
+										<input type="file" id="logo-file" accept="image/*" class="form-control input-sm" />
+									</div>
+									<button type="button" id="btn-upload-logo" class="btn btn-default btn-sm"><i class="fa fa-upload"></i> Upload Logo</button>
+									<button type="button" id="btn-hapus-logo" class="btn btn-danger btn-sm" style="display:none;"><i class="fa fa-trash"></i> Hapus</button>
+									<p class="help-block">Format: jpg/png/webp, maks 1MB, lebar ideal ≤ 400px.</p>
+									<div id="logo-preview" style="padding:10px; border:1px solid #ddd; border-radius:6px; background:#fafafa; display:inline-block; max-width:260px;">
+										<?php if(!empty($current_logo)){ ?>
+											<img src="<?php echo base_url($current_logo); ?>" style="max-width:240px; height:auto;" />
+										<?php } else { ?>
+											<em>Belum ada logo khusus</em>
+										<?php } ?>
+									</div>
+								</div>
+							</div>
                     </div>
 					<div class="box-footer">
 						<button type="submit" id="btn-simpan" class="btn btn-primary pull-right">Simpan Pengaturan</button>
@@ -107,6 +128,46 @@
 		CKEDITOR.replace('zyacbt_informasi');
 		
 		load_data();
+
+		// Tampilkan tombol hapus jika sudah ada logo
+		<?php if(!empty($current_logo)){ ?>
+		$('#btn-hapus-logo').show();
+		<?php } ?>
+
+		$('#btn-upload-logo').click(function(){
+			var file = $('#logo-file')[0].files[0];
+			if(!file){
+				$('#logo-alert').html('<div class="alert alert-warning" style="margin-top:8px;">Pilih file dulu.</div>');
+				return;
+			}
+			var fd = new FormData(); fd.append('logo', file);
+			$('#logo-alert').html('<div class="alert alert-info" style="margin-top:8px;">Mengupload...</div>');
+			$.ajax({
+				url: '<?php echo site_url($url.'/upload_logo'); ?>',
+				type: 'POST', data: fd, processData:false, contentType:false,
+				success: function(res){
+					try{ var o = JSON.parse(res); }catch(e){ o={status:0,pesan:'Respon tidak valid'}; }
+					if(o.status==1){
+						$('#logo-alert').html('<div class="alert alert-success" style="margin-top:8px;">'+o.pesan+'</div>');
+						$('#logo-preview').html('<img src="'+o.path+'" style="max-width:240px; height:auto;" />');
+						$('#btn-hapus-logo').show();
+					}else{
+						$('#logo-alert').html('<div class="alert alert-danger" style="margin-top:8px;">'+o.pesan+'</div>');
+					}
+				},
+				error: function(){
+					$('#logo-alert').html('<div class="alert alert-danger" style="margin-top:8px;">Gagal koneksi server</div>');
+				}
+			});
+		});
+
+		$('#btn-hapus-logo').click(function(){
+			if(!confirm('Hapus logo khusus?')) return;
+			// Reset tampilan (hapus manual di DB jika ingin benar-benar kosong)
+			$('#logo-preview').html('<em>Belum ada logo khusus</em>');
+			$('#btn-hapus-logo').hide();
+			$('#logo-alert').html('<div class="alert alert-info" style="margin-top:8px;">Logo direset (hapus record login_logo di tabel app_setting untuk final).</div>');
+		});
         $('#form-pengaturan').submit(function(){
             $("#modal-proses").modal('show');
 			$('#zyacbt-informasi').val(CKEDITOR.instances.zyacbt_informasi.getData());
