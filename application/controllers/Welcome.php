@@ -50,6 +50,12 @@ class Welcome extends CI_Controller {
 						// Ambil logo login dari Setting_model jika ada
 						$this->load->model('Setting_model');
 						$data['login_logo'] = $this->Setting_model->get('login_logo', '');
+                        // Ambil nama CBT (sekolah) untuk teks selamat datang
+                        $data['cbt_nama'] = 'CBT';
+                        $q_nama = $this->cbt_konfigurasi_model->get_by_kolom_limit('konfigurasi_kode','cbt_nama',1);
+                        if($q_nama->num_rows()>0){
+                            $data['cbt_nama'] = $q_nama->row()->konfigurasi_isi;
+                        }
 						$this->template->display_user($this->kelompok.'/welcome_view', 'Selamat Datang', $data);
 					}else{
 						redirect('tes_dashboard');

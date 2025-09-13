@@ -5,7 +5,7 @@
   <div class="header-box">
     <div class="header-content">
       <div class="title-group">
-        <h2 class="main-title">L-SCHOOL CBT SYSTEM</h2>
+        <h2 class="main-title">EDUPUS CBT SYSTEM</h2>
         <span class="sub-title">Ujian Online Berbasis AI Protection</span>
         <br><strong class="desc-title">WARNING !...... </strong>
         <br><strong class="desc-title">SYSTEM AUTO LOGOUT/BLOCKED</strong>
@@ -138,6 +138,16 @@
             $logo_src = !empty($login_logo) ? base_url($login_logo) : 'https://cbt1.edupus.id/edupus.jpg';
           ?>
           <img src="<?php echo $logo_src; ?>" alt="Logo" style="max-width: 180px; height: auto;">
+        </div>
+
+        <!-- Teks Selamat Datang Sekolah -->
+        <div style="margin-bottom: 20px;">
+          <h4 style="margin:0; font-weight:600; font-size:20px; color:#222; line-height:1.3;">
+            Selamat Datang<br />
+            <span style="color:#2b5f56; display:inline-block; margin-top:4px;">
+              <?php echo !empty($cbt_nama) ? htmlspecialchars($cbt_nama) : 'CBT'; ?>
+            </span>
+          </h4>
         </div>
 
         <!-- Judul Login (restore simpler card heading for visibility) -->
