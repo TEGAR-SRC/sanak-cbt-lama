@@ -5,8 +5,8 @@
     <title><?php if(!empty($site_name)){ echo $site_name; } ?> | <?php echo $title; ?></title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content='width=device-width, initial-scale=0.9, minimum-scale=0.1, maximum-scale=10, user-scalable=yes' name='viewport'>
-  <meta name="description" content="Aplikasi Ujian Online edpus">
-  <meta name="keywords" content="Aplikasi Ujian Online edpus">
+  <meta name="description" content="Aplikasi Ujian Online edupus">
+  <meta name="keywords" content="Aplikasi Ujian Online edupus">
   <meta name="author" content="edupus">
     <!-- Bootstrap 3.3.4 -->
     <link href="<?php echo base_url(); ?>public/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
